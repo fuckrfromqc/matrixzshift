@@ -30,16 +30,16 @@ $(document).ready(function() {
         // Generate matrix input forms
         generateMatrixForms(statesFrom, statesTo, numMatrices, stableMatrixOption);
 
-        // Show the compute button if not already visible
-        if ($('#computeButton').length === 0) {
-            // Add Compute Button
-            $('#mainContent').append('<button id="computeButton" class="btn btn-success mt-3">Compute Z-Shifts</button>');
+        // Remove any existing compute button
+        $('#computeButton').remove();
 
-            // Attach event handler to Compute button
-            $('#computeButton').click(function() {
-                computeZShifts(statesFrom, statesTo, numMatrices, stableMatrixOption);
-            });
-        }
+        // Add Compute Button
+        $('#mainContent').append('<button id="computeButton" class="btn btn-success mt-3">Compute Z-Shifts</button>');
+
+        // Attach event handler to Compute button
+        $('#computeButton').off('click').on('click', function() {
+            computeZShifts(statesFrom, statesTo, numMatrices, stableMatrixOption);
+        });
 
         // Scroll to the matrix forms
         $('html, body').animate({
@@ -64,20 +64,23 @@ $(document).ready(function() {
 
         // Conditionally display the stable matrix form
         if (stableMatrixOption === 'input') {
-            container.append('<h2>Stable (Neutral) Matrix</h2>');
+            container.append('<h3>Stable (Neutral) Matrix</h3>');
             container.append(generateMatrixForm('stableMatrix', statesFrom, statesTo));
         }
 
         // Observed Matrices Forms
         for (let i = 0; i < numMatrices; i++) {
-            container.append(`<h2>Observed Matrix ${i + 1}</h2>`);
+            container.append(`<h3>Observed Matrix ${i + 1}</h3>`);
             container.append(generateMatrixForm(`observedMatrix${i}`, statesFrom, statesTo));
         }
+
+        // Show the matrix forms
+        container.show();
     }
 
     // Function to generate a matrix input form
     function generateMatrixForm(matrixId, statesFrom, statesTo) {
-        let formHtml = `<table class="table table-bordered" id="${matrixId}">`;
+        let formHtml = `<table class="table table-bordered table-sm" id="${matrixId}">`;
         // Header row
         formHtml += '<thead class="thead-light"><tr><th></th>';
         statesTo.forEach(state => {
@@ -89,7 +92,7 @@ $(document).ready(function() {
         statesFrom.forEach(stateFrom => {
             formHtml += `<tr><th>${stateFrom}</th>`;
             statesTo.forEach(() => {
-                formHtml += '<td><input type="number" step="any" min="0" max="1" class="form-control" required></td>';
+                formHtml += '<td><input type="number" step="any" min="0" max="1" class="form-control form-control-sm" required></td>';
             });
             formHtml += '</tr>';
         });
