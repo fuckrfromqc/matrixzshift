@@ -41,7 +41,7 @@
         <h1 class="text-center">Z-Shift Computation Tool</h1>
         <hr>
         <!-- Form to Select Grid Size and Number of Matrices -->
-        <div id="initialForm">
+        <div id="mainContent">
             <form id="dimensionForm">
                 <div class="form-row">
                     <div class="form-group col-md-4">
@@ -68,13 +68,13 @@
                         <option value="compute">Compute stable matrix automatically</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Next</button>
+                <button type="submit" class="btn btn-primary">Generate Matrices</button>
             </form>
+            <!-- Matrix Input Forms -->
+            <div id="matrixForms" style="display: none;"></div>
+            <!-- Results Section -->
+            <div id="resultsSection" style="display: none;"></div>
         </div>
-        <!-- Matrix Input Forms -->
-        <div id="matrixForms" style="display: none;"></div>
-        <!-- Results Section -->
-        <div id="resultsSection" style="display: none;"></div>
     </div>
 
     <!-- jQuery and Bootstrap JS -->
