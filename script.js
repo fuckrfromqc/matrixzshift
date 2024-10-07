@@ -20,16 +20,37 @@ $(document).ready(function() {
         $('#initialForm').hide();
         generateMatrixForms(states, numMatrices);
         $('#matrixForms').show();
-    });
-
-    // Function to generate matrix input forms
-    function generateMatrixForms(states, numMatrices) {
+        });
+    
+    
+        $('#dimensionForm').submit(function(event) {
+            event.preventDefault();
+            const gridSize = parseInt($('#gridSize').val());
+            numMatrices = parseInt($('#numMatrices').val());
+            const stableMatrixOption = $('#stableMatrixOption').val();
+    
+            // Generate state labels
+            states = [];
+            for (let i = 1; i <= gridSize; i++) {
+                states.push('S' + i);
+            }
+    
+            // Hide the initial form and show the matrix forms
+            $('#initialForm').hide();
+            generateMatrixForms(states, numMatrices, stableMatrixOption);
+            $('#matrixForms').show();
+        });
+    
+    // Modify the generateMatrixForms function
+    function generateMatrixForms(states, numMatrices, stableMatrixOption) {
         const container = $('#matrixForms');
         container.html('');
 
-        // Stable Matrix Form
-        container.append('<h2>Stable (Neutral) Matrix</h2>');
-        container.append(generateMatrixForm('stableMatrix', states));
+        // Conditionally display the stable matrix form
+        if (stableMatrixOption === 'input') {
+            container.append('<h2>Stable (Neutral) Matrix</h2>');
+            container.append(generateMatrixForm('stableMatrix', states));
+        }
 
         // Observed Matrices Forms
         for (let i = 0; i < numMatrices; i++) {
@@ -42,7 +63,7 @@ $(document).ready(function() {
 
         // Attach event handler to Compute button
         $('#computeButton').click(function() {
-            computeZShifts(states, numMatrices);
+            computeZShifts(states, numMatrices, stableMatrixOption);
         });
     }
 
