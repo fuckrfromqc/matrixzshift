@@ -8,6 +8,11 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
+    <!-- Font Awesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
     <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -38,36 +43,32 @@
         <!-- Form to Select Grid Size and Number of Matrices -->
         <div id="initialForm">
             <form id="dimensionForm">
-
-
-                <div class="form-group">
-                    <label for="numRows">Number of Rows (States from):</label>
-                    <input type="number" class="form-control" id="numRows" min="1" required>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="numRows">Number of Rows (States from):</label>
+                        <input type="number" class="form-control" id="numRows" min="1" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="numCols">Number of Columns (States to):</label>
+                        <input type="number" class="form-control" id="numCols" min="1" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="numMatrices">Number of Observed Matrices:</label>
+                        <input type="number" class="form-control" id="numMatrices" min="1" value="1" required>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="numCols">Number of Columns (States to):</label>
-                    <input type="number" class="form-control" id="numCols" min="1" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="gridSize">Grid Size (Number of States):</label>
-                    <input type="number" class="form-control" id="gridSize" min="2" required>
-                </div>
-                <div class="form-group">
-                    <label for="numMatrices">Number of Observed Matrices:</label>
-                    <input type="number" class="form-control" id="numMatrices" min="1" value="1" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Next</button>
-                
-                <div class="form-group">
-                    <label for="stableMatrixOption">Stable Matrix Option:</label>
+                    <label for="stableMatrixOption">Stable Matrix Option:
+                        <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" 
+                           title="Choose whether to input your own stable matrix or compute it automatically based on observed matrices."></i>
+                    </label>
                     <select class="form-control" id="stableMatrixOption" required>
                         <option value="" disabled selected>Select an option</option>
                         <option value="input">I will input a stable matrix</option>
                         <option value="compute">Compute stable matrix automatically</option>
                     </select>
                 </div>
-
+                <button type="submit" class="btn btn-primary">Next</button>
             </form>
         </div>
         <!-- Matrix Input Forms -->
@@ -79,7 +80,7 @@
     <!-- jQuery and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"
     ></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
