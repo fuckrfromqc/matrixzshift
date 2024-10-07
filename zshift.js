@@ -79,7 +79,7 @@ function validateMatrices(states, numMatrices, stableMatrixOption) {
 }
 
 
-function getMatrixData(matrixId, states) {
+function getMatrixData(matrixId, statesFrom, statesTo) {
     const matrix = [];
     const table = $(`#${matrixId}`);
     table.find('tbody tr').each(function() {
@@ -91,6 +91,7 @@ function getMatrixData(matrixId, states) {
     });
     return matrix;
 }
+
 
 function validateMatrix(matrix) {
     for (const row of matrix) {
