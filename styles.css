@@ -1,0 +1,34 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.table input[type="number"] {
+    width: 80px;
+}
+
+#matrixForms {
+    margin-top: 20px;
+}
+
+#resultsSection {
+    margin-top: 30px;
+}
+
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 400px;
+    width: 80%;
+}
+
+.alert {
+    margin-top: 20px;
+}
