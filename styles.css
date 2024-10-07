@@ -32,3 +32,25 @@ h1, h2, h3 {
 .alert {
     margin-top: 20px;
 }
+
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.table-danger th, .table-danger td {
+    background-color: #f8d7da;
+}
+
+.tooltip-inner {
+    max-width: 250px;
+    text-align: left;
+}
+
+.form-group i {
+    color: #6c757d;
+    cursor: pointer;
+}
+
+.form-row {
+    margin-bottom: 15px;
+}
