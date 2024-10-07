@@ -4,6 +4,7 @@ $(document).ready(function() {
     let statesFrom = [];
     let statesTo = [];
     let numMatrices = 0;
+    let stableMatrixOption = '';
 
     // Initialize tooltips
     $('[data-toggle="tooltip"]').tooltip();
@@ -14,7 +15,7 @@ $(document).ready(function() {
         const numRows = parseInt($('#numRows').val());
         const numCols = parseInt($('#numCols').val());
         numMatrices = parseInt($('#numMatrices').val());
-        const stableMatrixOption = $('#stableMatrixOption').val();
+        stableMatrixOption = $('#stableMatrixOption').val();
 
         // Generate state labels
         statesFrom = [];
@@ -26,10 +27,24 @@ $(document).ready(function() {
             statesTo.push('S' + j);
         }
 
-        // Hide the initial form and show the matrix forms
-        $('#initialForm').hide();
+        // Generate matrix input forms
         generateMatrixForms(statesFrom, statesTo, numMatrices, stableMatrixOption);
-        $('#matrixForms').show();
+
+        // Show the compute button if not already visible
+        if ($('#computeButton').length === 0) {
+            // Add Compute Button
+            $('#mainContent').append('<button id="computeButton" class="btn btn-success mt-3">Compute Z-Shifts</button>');
+
+            // Attach event handler to Compute button
+            $('#computeButton').click(function() {
+                computeZShifts(statesFrom, statesTo, numMatrices, stableMatrixOption);
+            });
+        }
+
+        // Scroll to the matrix forms
+        $('html, body').animate({
+            scrollTop: $("#matrixForms").offset().top - 20
+        }, 500);
     });
 
     // Add real-time validation for input fields
@@ -58,14 +73,6 @@ $(document).ready(function() {
             container.append(`<h2>Observed Matrix ${i + 1}</h2>`);
             container.append(generateMatrixForm(`observedMatrix${i}`, statesFrom, statesTo));
         }
-
-        // Add Compute Button
-        container.append('<button id="computeButton" class="btn btn-success mt-3">Compute Z-Shifts</button>');
-
-        // Attach event handler to Compute button
-        $('#computeButton').click(function() {
-            computeZShifts(statesFrom, statesTo, numMatrices, stableMatrixOption);
-        });
     }
 
     // Function to generate a matrix input form
