@@ -1,5 +1,7 @@
 // zshift.js
 
+// zshift.js
+
 function computeZShifts(statesFrom, statesTo, numMatrices, stableMatrixOption) {
     const matrices = validateMatrices(statesFrom, statesTo, numMatrices, stableMatrixOption);
     if (!matrices) return; // Validation failed
@@ -57,6 +59,8 @@ function validateMatrices(statesFrom, statesTo, numMatrices, stableMatrixOption)
 
     return valid ? matrices : null;
 }
+
+
 
 function getMatrixData(matrixId, statesFrom, statesTo) {
     const matrix = [];
