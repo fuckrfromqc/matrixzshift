@@ -8,48 +8,44 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
-    <!-- Font Awesome for Icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    />
     <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">Z-Shift Tool</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
-              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="nav-link" href="index.html">Compute Z-Shift</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="about.html">About the Project</a>
-          </li>
-        </ul>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-4">
+      <div class="container">
+        <a class="navbar-brand" href="#">Z-Shift Computation Tool</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="index.html">Compute Z-Shift</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About the Project</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
 
     <!-- Main Container -->
-    <div class="container mt-5">
-        <h1 class="text-center">Z-Shift Computation Tool</h1>
-        <hr>
-        <!-- Form to Select Grid Size and Number of Matrices -->
+    <div class="container">
+        <h1 class="text-center mb-4">Z-Shift Computation Tool</h1>
+        <!-- Form to Select Matrix Dimensions and Number of Matrices -->
         <div id="mainContent">
             <form id="dimensionForm">
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label for="numRows">Number of Rows (States from):</label>
+                        <label for="numRows">Number of Rows (States From):</label>
                         <input type="number" class="form-control" id="numRows" min="1" required>
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="numCols">Number of Columns (States to):</label>
+                        <label for="numCols">Number of Columns (States To):</label>
                         <input type="number" class="form-control" id="numCols" min="1" required>
                     </div>
                     <div class="form-group col-md-4">
@@ -58,14 +54,11 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="stableMatrixOption">Stable Matrix Option:
-                        <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" 
-                           title="Choose whether to input your own stable matrix or compute it automatically based on observed matrices."></i>
-                    </label>
+                    <label for="stableMatrixOption">Stable Matrix Option:</label>
                     <select class="form-control" id="stableMatrixOption" required>
                         <option value="" disabled selected>Select an option</option>
-                        <option value="input">I will input a stable matrix</option>
-                        <option value="compute">Compute stable matrix automatically</option>
+                        <option value="input">Input a Stable Matrix</option>
+                        <option value="compute">Compute Stable Matrix Automatically</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Generate Matrices</button>
@@ -76,6 +69,13 @@
             <div id="resultsSection" style="display: none;"></div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+      <div class="container text-center">
+        <span class="text-muted">&copy; 2023 Z-Shift Computation Tool</span>
+      </div>
+    </footer>
 
     <!-- jQuery and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
