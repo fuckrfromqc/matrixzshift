@@ -1,8 +1,7 @@
 // zshift.js
 
-
-function computeZShifts(states, numMatrices, stableMatrixOption) {
-    const matrices = validateMatrices(states, numMatrices, stableMatrixOption);
+function computeZShifts(statesFrom, statesTo, numMatrices, stableMatrixOption) {
+    const matrices = validateMatrices(statesFrom, statesTo, numMatrices, stableMatrixOption);
     if (!matrices) return; // Validation failed
 
     let stableMatrix;
@@ -29,33 +28,14 @@ function computeZShifts(states, numMatrices, stableMatrixOption) {
     displayResults(zShifts);
 }
 
-function computeAverageMatrix(matrices) {
-    const numMatrices = matrices.length;
-    const gridSize = matrices[0].length;
-    const avgMatrix = [];
-
-    for (let i = 0; i < gridSize; i++) {
-        avgMatrix[i] = [];
-        for (let j = 0; j < gridSize; j++) {
-            let sum = 0;
-            for (let k = 0; k < numMatrices; k++) {
-                sum += matrices[k][i][j];
-            }
-            avgMatrix[i][j] = sum / numMatrices;
-        }
-    }
-    return avgMatrix;
-}
-
-
-function validateMatrices(states, numMatrices, stableMatrixOption) {
+function validateMatrices(statesFrom, statesTo, numMatrices, stableMatrixOption) {
     let valid = true;
     const matrices = [];
 
     if (stableMatrixOption === 'input') {
         // Validate Stable Matrix
-        const stableMatrix = getMatrixData('stableMatrix', states);
-        if (!validateMatrix(stableMatrix)) {
+        const stableMatrix = getMatrixData('stableMatrix', statesFrom, statesTo);
+        if (!validateMatrix(stableMatrix, 'stableMatrix')) {
             alert('Each row of the stable matrix must sum to 1.');
             valid = false;
         } else {
@@ -65,8 +45,8 @@ function validateMatrices(states, numMatrices, stableMatrixOption) {
 
     // Validate Observed Matrices
     for (let i = 0; i < numMatrices; i++) {
-        const observedMatrix = getMatrixData(`observedMatrix${i}`, states);
-        if (!validateMatrix(observedMatrix)) {
+        const observedMatrix = getMatrixData(`observedMatrix${i}`, statesFrom, statesTo);
+        if (!validateMatrix(observedMatrix, `observedMatrix${i}`)) {
             alert(`Each row of observed matrix ${i + 1} must sum to 1.`);
             valid = false;
             break;
@@ -77,7 +57,6 @@ function validateMatrices(states, numMatrices, stableMatrixOption) {
 
     return valid ? matrices : null;
 }
-
 
 function getMatrixData(matrixId, statesFrom, statesTo) {
     const matrix = [];
@@ -92,15 +71,40 @@ function getMatrixData(matrixId, statesFrom, statesTo) {
     return matrix;
 }
 
-
-function validateMatrix(matrix) {
-    for (const row of matrix) {
+function validateMatrix(matrix, matrixId) {
+    let valid = true;
+    matrix.forEach((row, rowIndex) => {
         const sum = row.reduce((a, b) => a + b, 0);
+        const rowElement = $(`#${matrixId} tbody tr:eq(${rowIndex})`);
         if (Math.abs(sum - 1) > 0.01) { // Allow small numerical errors
-            return false;
+            valid = false;
+            // Highlight the invalid row
+            rowElement.addClass('table-danger');
+        } else {
+            // Remove any previous highlighting
+            rowElement.removeClass('table-danger');
+        }
+    });
+    return valid;
+}
+
+function computeAverageMatrix(matrices) {
+    const numMatrices = matrices.length;
+    const numRows = matrices[0].length;
+    const numCols = matrices[0][0].length;
+    const avgMatrix = [];
+
+    for (let i = 0; i < numRows; i++) {
+        avgMatrix[i] = [];
+        for (let j = 0; j < numCols; j++) {
+            let sum = 0;
+            for (let k = 0; k < numMatrices; k++) {
+                sum += matrices[k][i][j];
+            }
+            avgMatrix[i][j] = sum / numMatrices;
         }
     }
-    return true;
+    return avgMatrix;
 }
 
 function optimizeZShift(P, Q) {
