@@ -38,6 +38,17 @@
         <!-- Form to Select Grid Size and Number of Matrices -->
         <div id="initialForm">
             <form id="dimensionForm">
+
+
+                <div class="form-group">
+                    <label for="numRows">Number of Rows (States from):</label>
+                    <input type="number" class="form-control" id="numRows" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="numCols">Number of Columns (States to):</label>
+                    <input type="number" class="form-control" id="numCols" min="1" required>
+                </div>
+
                 <div class="form-group">
                     <label for="gridSize">Grid Size (Number of States):</label>
                     <input type="number" class="form-control" id="gridSize" min="2" required>
