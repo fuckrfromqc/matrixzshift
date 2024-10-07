@@ -1,11 +1,22 @@
 // zshift.js
 
-function computeZShifts(states, numMatrices) {
-    const matrices = validateMatrices(states, numMatrices);
+
+function computeZShifts(states, numMatrices, stableMatrixOption) {
+    const matrices = validateMatrices(states, numMatrices, stableMatrixOption);
     if (!matrices) return; // Validation failed
 
-    const stableMatrix = matrices[0];
-    const observedMatrices = matrices.slice(1);
+    let stableMatrix;
+    let observedMatrices;
+
+    if (stableMatrixOption === 'input') {
+        stableMatrix = matrices[0];
+        observedMatrices = matrices.slice(1);
+    } else {
+        observedMatrices = matrices;
+        // Compute the stable matrix as the average of observed matrices
+        stableMatrix = computeAverageMatrix(observedMatrices);
+    }
+
     const zShifts = [];
 
     // For each observed matrix, compute z-shift
@@ -18,17 +29,38 @@ function computeZShifts(states, numMatrices) {
     displayResults(zShifts);
 }
 
-function validateMatrices(states, numMatrices) {
+function computeAverageMatrix(matrices) {
+    const numMatrices = matrices.length;
+    const gridSize = matrices[0].length;
+    const avgMatrix = [];
+
+    for (let i = 0; i < gridSize; i++) {
+        avgMatrix[i] = [];
+        for (let j = 0; j < gridSize; j++) {
+            let sum = 0;
+            for (let k = 0; k < numMatrices; k++) {
+                sum += matrices[k][i][j];
+            }
+            avgMatrix[i][j] = sum / numMatrices;
+        }
+    }
+    return avgMatrix;
+}
+
+
+function validateMatrices(states, numMatrices, stableMatrixOption) {
     let valid = true;
     const matrices = [];
 
-    // Validate Stable Matrix
-    const stableMatrix = getMatrixData('stableMatrix', states);
-    if (!validateMatrix(stableMatrix)) {
-        alert('Each row of the stable matrix must sum to 1.');
-        valid = false;
-    } else {
-        matrices.push(stableMatrix);
+    if (stableMatrixOption === 'input') {
+        // Validate Stable Matrix
+        const stableMatrix = getMatrixData('stableMatrix', states);
+        if (!validateMatrix(stableMatrix)) {
+            alert('Each row of the stable matrix must sum to 1.');
+            valid = false;
+        } else {
+            matrices.push(stableMatrix);
+        }
     }
 
     // Validate Observed Matrices
@@ -45,6 +77,7 @@ function validateMatrices(states, numMatrices) {
 
     return valid ? matrices : null;
 }
+
 
 function getMatrixData(matrixId, states) {
     const matrix = [];
