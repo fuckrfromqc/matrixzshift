@@ -5,6 +5,7 @@ $(document).ready(function() {
     let statesTo = [];
     let numMatrices = 0;
     let stableMatrixOption = '';
+    let methodology = '';
 
     // Initialize tooltips
     $('[data-toggle="tooltip"]').tooltip();
@@ -16,6 +17,7 @@ $(document).ready(function() {
         const numCols = parseInt($('#numCols').val());
         numMatrices = parseInt($('#numMatrices').val());
         stableMatrixOption = $('#stableMatrixOption').val();
+        methodology = $('#methodology').val();
 
         // Generate state labels
         statesFrom = [];
@@ -38,7 +40,7 @@ $(document).ready(function() {
 
         // Attach event handler to Compute button
         $('#computeButton').off('click').on('click', function() {
-            computeZShifts(statesFrom, statesTo, numMatrices, stableMatrixOption);
+            computeZShifts(statesFrom, statesTo, numMatrices, stableMatrixOption, methodology);
         });
 
         // Scroll to the matrix forms
