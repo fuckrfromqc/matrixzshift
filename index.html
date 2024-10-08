@@ -40,17 +40,21 @@
         <div id="mainContent">
             <form id="dimensionForm">
                 <div class="form-row">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="numRows">Number of Rows (States From):</label>
                         <input type="number" class="form-control" id="numRows" min="1" required>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="numCols">Number of Columns (States To):</label>
                         <input type="number" class="form-control" id="numCols" min="1" required>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="numMatrices">Number of Observed Matrices:</label>
                         <input type="number" class="form-control" id="numMatrices" min="1" value="1" required>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="rho">Correlation Parameter (ρ):</label>
+                        <input type="number" class="form-control" id="rho" step="any" min="0" max="1" value="0.1" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -59,6 +63,14 @@
                         <option value="" disabled selected>Select an option</option>
                         <option value="input">Input a Stable Matrix</option>
                         <option value="compute">Compute Stable Matrix Automatically</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="methodology">Select Methodology:</label>
+                    <select class="form-control" id="methodology" required>
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="imf">IMF Z-Score Methodology</option>
+                        <option value="alternative">Alternative Methodology</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Generate Matrices</button>
@@ -84,6 +96,8 @@
     ></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jStat Library -->
+    <script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
     <!-- Custom JS -->
     <script src="script.js"></script>
     <script src="zshift.js"></script>
