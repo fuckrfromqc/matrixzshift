@@ -2,7 +2,7 @@
 
 // zshift.js
 
-function computeZShifts(statesFrom, statesTo, numMatrices, stableMatrixOption) {
+function computeZShifts(statesFrom, statesTo, numMatrices, stableMatrixOption, methodology) {
     const matrices = validateMatrices(statesFrom, statesTo, numMatrices, stableMatrixOption);
     if (!matrices) return; // Validation failed
 
@@ -18,17 +18,138 @@ function computeZShifts(statesFrom, statesTo, numMatrices, stableMatrixOption) {
         stableMatrix = computeAverageMatrix(observedMatrices);
     }
 
+    // Get rho from the input
+    const rho = parseFloat($('#rho').val());
+
     const zShifts = [];
 
-    // For each observed matrix, compute z-shift
-    observedMatrices.forEach((Q, index) => {
-        const z = optimizeZShift(stableMatrix, Q);
-        zShifts.push(z);
-    });
+    if (methodology === 'imf') {
+        // Compute bin boundaries from the stable matrix
+        const binBoundaries = computeBinBoundaries(stableMatrix);
+
+        // For each observed matrix, compute z-shift using IMF methodology
+        observedMatrices.forEach((Q, index) => {
+            const z = optimizeZShiftIMF(Q, binBoundaries, rho);
+            zShifts.push(z);
+        });
+    } else if (methodology === 'alternative') {
+        // Alternative methodology (e.g., original implementation)
+        observedMatrices.forEach((Q, index) => {
+            const z = optimizeZShiftAlternative(stableMatrix, Q);
+            zShifts.push(z);
+        });
+    } else {
+        alert('Invalid methodology selected.');
+        return;
+    }
 
     // Display Results
     displayResults(zShifts);
 }
+
+function computeBinBoundaries(stableMatrix) {
+    const binBoundaries = [];
+    for (let i = 0; i < stableMatrix.length; i++) {
+        const row = stableMatrix[i];
+        const cumProbs = [0];
+        let cumSum = 0;
+        for (let j = 0; j < row.length; j++) {
+            cumSum += row[j];
+            cumProbs.push(cumSum);
+        }
+        const x_i = cumProbs.map(p => jStat.normal.inv(p, 0, 1));
+        binBoundaries.push(x_i);
+    }
+    return binBoundaries;
+}
+
+function optimizeZShiftIMF(P_obs, binBoundaries, rho) {
+    function cdfStandardNormal(x) {
+        return jStat.normal.cdf(x, 0, 1);
+    }
+
+    function objective(Z) {
+        let sumSquares = 0;
+        for (let i = 0; i < P_obs.length; i++) {
+            const x_i = binBoundaries[i]; // Array of bin boundaries for state i
+            for (let j = 0; j < P_obs[i].length; j++) {
+                const A = x_i[j];     // Lower bin boundary
+                const B = x_i[j + 1]; // Upper bin boundary
+                const denom = Math.sqrt(1 - rho);
+                const adjustedA = (A - Math.sqrt(rho) * Z) / denom;
+                const adjustedB = (B - Math.sqrt(rho) * Z) / denom;
+                const P_expected = cdfStandardNormal(adjustedB) - cdfStandardNormal(adjustedA);
+                const P_obs_ij = P_obs[i][j];
+                const diff = P_obs_ij - P_expected;
+                sumSquares += diff * diff;
+            }
+        }
+        return sumSquares;
+    }
+
+    // Use Golden Section Search to find Z that minimizes objective(Z)
+    const tol = 1e-5;
+    let a = -5;
+    let b = 5;
+    const phi = (1 + Math.sqrt(5)) / 2;
+
+    let c = b - (b - a) / phi;
+    let d = a + (b - a) / phi;
+    while (Math.abs(b - a) > tol) {
+        if (objective(c) < objective(d)) {
+            b = d;
+        } else {
+            a = c;
+        }
+        c = b - (b - a) / phi;
+        d = a + (b - a) / phi;
+    }
+    const Z_opt = (a + b) / 2;
+    return Z_opt;
+}
+
+function optimizeZShiftAlternative(P, Q) {
+    // Alternative method (e.g., previous implementation)
+    const epsilon = 1e-10;
+    let a = -10, b = 10;
+    const tol = 1e-5;
+    let z;
+
+    function objective(z) {
+        // Compute sum of squared differences
+        let sumSquares = 0;
+        for (let i = 0; i < P.length; i++) {
+            for (let j = 0; j < P[i].length; j++) {
+                const pij = Math.min(Math.max(P[i][j], epsilon), 1 - epsilon);
+                const qij = Math.min(Math.max(Q[i][j], epsilon), 1 - epsilon);
+                const Lij = Math.log(pij / (1 - pij));
+                const Lij_shifted = Lij + z;
+                const pij_shifted = 1 / (1 + Math.exp(-Lij_shifted));
+                const diff = pij_shifted - qij;
+                sumSquares += diff * diff;
+            }
+        }
+        return sumSquares;
+    }
+
+    // Golden Section Search
+    const phi = (1 + Math.sqrt(5)) / 2;
+    let c = b - (b - a) / phi;
+    let d = a + (b - a) / phi;
+    while (Math.abs(b - a) > tol) {
+        if (objective(c) < objective(d)) {
+            b = d;
+        } else {
+            a = c;
+        }
+        c = b - (b - a) / phi;
+        d = a + (b - a) / phi;
+    }
+    z = (b + a) / 2;
+    return z;
+}
+
+
 
 function validateMatrices(statesFrom, statesTo, numMatrices, stableMatrixOption) {
     let valid = true;
